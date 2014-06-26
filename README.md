@@ -3,11 +3,7 @@ Generic Chrome Mobile Polymer Application
 
 This is a generic app framework that can run as a standalone webpage, a chrome extension, an android app, or an ios app.  I've taken the [polymer tutorial app](http://www.polymer-project.org/docs/start/tutorial/intro.html) and packaged it in a cca wrapper.
 
-![A Generic Chrome App running as a Chrome Extension](docs/images/ChromeExtensionSlideNav.png)
-
-![A Generic Chrome App running as a iOS App](docs/images/iPhoneAppSlideNav.png)
-
-![A Generic Chrome App running as an Android App](docs/images/AndroidAppSlideNav.png)
+![A Demo Polymer App running in Grunt](docs/images/PolymerAppInGrunt.png)
 
 Features
 --------
@@ -154,15 +150,11 @@ File documentation
   * **``bower_components/``** Contains external javascript and css dependencies brought in by bower.json.  Should not be version controlled or modified directly- make all modifications to ``../bower.json`` using ``bower install --save``
   * **``images/``** Contains all packaged images used by the application, i.e. logos.
   * **``res/``** Contains resources used by the packaged apps, such as splash screens (TBD).
-  * **``scripts/``** Contains all angular scripts and javascript objects used by the application
-    
-    * **``app.js``** Contains the definition for the main angular app
-    * **``controllers/``** Contains controllers for various parts of the application
-    
+  * **``scripts/``** Contains all javascript objects used by the application    
   * **``styles/``** Contains custom stylesheets for the application    
+
     * **``main.css``** Common css for the application
-    * **``nav.css``** Styling related to the top nav
-    * **``sidenav.css``** Styling related to the side nav
+
   * **``views/``** Contains different screens for the application
   
     * **``main.html``** The landing page that the user first sees
