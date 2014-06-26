@@ -4,6 +4,8 @@ Generic Chrome Mobile Polymer Application
 This is a generic app framework that can run as a standalone webpage, a chrome extension, an android app, or an ios app.  I've taken the [polymer tutorial app](http://www.polymer-project.org/docs/start/tutorial/intro.html) and packaged it in a cca wrapper.
 
 ![A Demo Polymer App running in Grunt](docs/images/PolymerAppInGrunt.png)
+![A Demo Polymer App running in Chrome Extension](docs/images/PolymerAppInChromeExtension.png)
+![A Demo Polymer App running in IOS](docs/images/PolymerAppInIOS.png)
 
 Features
 --------
@@ -34,15 +36,16 @@ First time Setup
 4. run ``cca checkenv`` to ensure your machine is set up for mobile development.  If not this will instruct you on how to get Xcode and android development environments initialized for use with cca.
 5. run ``npm install -g ios-deploy``
 6. run ``npm install -g ios-sim``
+7. run ``npm install -g vulcanize``
 
 ### Setting up the repo after cloning for the first time
 
 1. run ``npm install`` to initialize node modules
 2. run ``bower install`` to initialize bower dependencies
-3. run ``cca pre-prepare`` to initialize cordova plugins
-4. run ``cca platform add ios`` to add ios platform to project
-5. run ``./initializePlugins.sh`` to initialize plugins
-
+3. run ``cca platform add ios`` to add ios platform to project
+4. run ``cca platform add android`` to add android4platform to project
+5. run ``cca pre-prepare``
+6. run ``cca prepare``
 
 ### Copying settings from chrome extension to android app
 
@@ -134,6 +137,10 @@ Extending the application
 1. ``cca plugin add <plugin name``
 2. ``cca pre-prepare``
 3. ``cca prepare``
+
+New javascript files may need to be (vulcanized)[http://www.polymer-project.org/articles/concatenating-web-components.html]
+
+1. ``vulcanize -o build.html index.html --csp``
 
 File documentation
 ------------------

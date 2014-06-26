@@ -5,7 +5,7 @@
  * @see http://developer.chrome.com/trunk/apps/app.window.html
  */
 chrome.app.runtime.onLaunched.addListener(function() {
-  chrome.app.window.create('index.html', {
+  chrome.app.window.create('build.html', {
     width: 320,
     height: 550
   });
