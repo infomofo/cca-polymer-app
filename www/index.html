@@ -1,0 +1,51 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-csp> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" ng-csp> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" ng-csp> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-csp> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- 1. Load platform.js for polyfill support. -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <script src="bower_components/platform/platform.js"></script>
+    <link rel="import" href="bower_components/font-roboto/roboto.html">
+    <link rel="import"
+      href="bower_components/core-header-panel/core-header-panel.html">
+    <link rel="import"
+      href="bower_components/core-toolbar/core-toolbar.html">
+    <link rel="import"
+      href="bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import" href="post-list.html">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+
+  <body unresolved>
+    <core-header-panel>
+      <core-toolbar>
+        <paper-tabs selected="all" valueattr="name" self-end>
+          <paper-tab name="all">ALL</paper-tab>
+          <paper-tab name="favorites">FAVORITES</paper-tab>
+        </paper-tabs>
+      </core-toolbar>
+      <div class="container" layout vertical center>
+        <post-list show="all"></post-list>
+      </div>
+    </core-header-panel>
+
+    <script>
+    var list = document.querySelector('post-list');
+    var tabs = document.querySelector('paper-tabs');
+
+    tabs.addEventListener('core-select', function() {
+      list.show = tabs.selected;
+    });
+    </script>
+  </body>
+</html>

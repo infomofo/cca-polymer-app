@@ -1,0 +1,16 @@
+{
+  "name": "Generic Polymer App",
+  "description": "Your Generic App",
+  "manifest_version": 2,
+  "version": "0.1.1",
+  "offline_enabled": true,
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "permissions": [
+    "<all_urls>",
+    "storage"
+  ]
+}
