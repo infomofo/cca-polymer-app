@@ -11,19 +11,10 @@
     <meta name="viewport" content="width=device-width">
 
     <!-- 1. Load platform.js for polyfill support. -->
-    <script src="bower_components/platform/platform.js"></script>
+  <link rel="stylesheet" href="styles/main.css">
 
-    <div hidden><!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-<link href="//fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet" type="text/css">
-</div>
-    <div hidden><!--
+  <script src="bower_components/platform/platform.js"></script>
+  <div hidden><!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
@@ -33,31 +24,82 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <!--
-`core-header-panel` contains a header section and a content panel section. Special
-support is provided for scrolling modes when one uses a core-toolbar or equivalent
-for the header section.
+`core-scaffold` provides general application layout, introducing a 
+responsive scaffold containing a header, toolbar, menu, title and 
+areas for application content.
 
 Example:
 
-    <core-header-panel>
-      <core-toolbar>Header</core-toolbar>
+    <core-scaffold>
+      <core-header-panel navigation flex mode="seamed">
+        <core-toolbar>Application</core-toolbar>
+        <core-menu theme="core-light-theme">
+          <core-item icon="settings" label="item1"></core-item>
+          <core-item icon="settings" label="item2"></core-item>
+        </core-menu>
+      </core-header-panel>
+      <div tool>Title</div>
       <div>Content goes here...</div>
-    </core-header-panel>
+    </core-scaffold>
 
-If you want to use other than `core-toolbar` for the header, add 
-`core-header` class to that element.
-
-Example:
-
-    <core-header-panel>
-      <div class="core-header">Header</div>
-      <div>Content goes here...</div>
-    </core-header-panel>
-
-Use `mode` to control the header and scrolling behavior.
+Use `mode` to control the header and scrolling behavior of `core-header-panel`
+and `responsiveWidth` to change the layout of the scaffold.
 
 @group Polymer Core Elements
-@element core-header-panel
+@element core-scaffold
+@homepage github.io
+-->
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`core-toolbar` is a horizontal bar containing elements that can be used for
+label, navigation, search and actions.
+
+    <core-toolbar>
+      <core-icon-button icon="menu" on-tap="{{menuAction}}"></core-icon-button>
+      <div flex>Title</div>
+      <core-icon-button icon="more" on-tap="{{moreAction}}"></core-icon-button>
+    </core-toolbar>
+
+`core-toolbar` has a standard height, but can made be taller by setting `tall`
+class on the `core-toolbar`.  This will make the toolbar 3x the normal height.
+
+    <core-toolbar class="tall">
+      <core-icon-button icon="menu"></core-icon-button>
+    </core-toolbar>
+    
+Apply `medium-tall` class to make the toolbar medium tall.  This will make the 
+toolbar 2x the normal height.
+
+    <core-toolbar class="medium-tall">
+      <core-icon-button icon="menu"></core-icon-button>
+    </core-toolbar>
+
+When taller, elements can pin to either the top (default), middle or bottom.
+
+    <core-toolbar class="tall">
+      <core-icon-button icon="menu"></core-icon-button>
+      <div class="middle indent">Middle Title</div>
+      <div class="bottom indent">Bottom Title</div>
+    </core-toolbar>
+    
+To make an element completely fit at the bottom of the toolbar, use `fit` along
+with `bottom`.
+
+    <core-toolbar class="tall">
+      <div id="progressBar" class="bottom fit"></div>
+    </core-toolbar>
+
+@group Polymer Core Elements
+@element core-toolbar
 @homepage github.io
 -->
 
@@ -352,161 +394,6 @@ html /deep/ [segment], html /deep/ segment {
 <script src="bower_components/polymer/polymer.js"></script>
 <!--<link rel="import" href="../polymer-dev/polymer.html">--> 
 
-<polymer-element name="core-header-panel" assetpath="bower_components/core-header-panel/">
-<template>
-
-  <style>/*
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-:host {
-  display: block;
-  position: relative;
-}
-
-#outerContainer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
-
-#mainPanel {
-  position: relative;
-}
-
-#mainContainer {
-  position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
-
-#dropShadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
-}
-
-#dropShadow.hidden {
-  display: none;
-}
-
-/* 
-mode: scroll 
-*/
-:host([mode=scroll]) #mainContainer {
-  overflow: visible;
-}
-
-/*
-mode: cover
-*/
-:host([mode=cover]) #mainPanel {
-  position: static;
-}
-
-:host([mode=cover]) #mainContainer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-:host([mode=cover]) #dropShadow {
-  position: static;
-  width: 100%;
-}
-</style>
-  
-  <div id="outerContainer" on-scroll="{{scroll}}" vertical="" layout="">
-
-    <content id="headerContent" select="core-toolbar, .core-header"></content>
-
-    <div id="mainPanel" flex="" vertical="" layout="">
-    
-      <div id="mainContainer" flex?="{{mode !== &apos;cover&apos;}}" on-scroll="{{scroll}}">
-        <content id="mainContent" select="*"></content>
-      </div>
-      
-      <div id="dropShadow"></div>
-      
-    </div>
-
-  </div>
-
-</template>
-
-</polymer-element>
-</div>
-    <div hidden><!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-`core-toolbar` is a horizontal bar containing elements that can be used for
-label, navigation, search and actions.
-
-    <core-toolbar>
-      <core-icon-button icon="menu" on-tap="{{menuAction}}"></core-icon-button>
-      <div flex>Title</div>
-      <core-icon-button icon="more" on-tap="{{moreAction}}"></core-icon-button>
-    </core-toolbar>
-
-`core-toolbar` has a standard height, but can be taller by setting `tall`
-class on the `core-toolbar`.  The will make the toolbar 3x the normal height.
-
-    <core-toolbar class="tall">
-      <core-icon-button icon="menu"></core-icon-button>
-    </core-toolbar>
-    
-Apply `medium-tall` class to make the toolbar medium tall.  The will make the 
-toolbar 2x the normal height.
-
-    <core-toolbar class="medium-tall">
-      <core-icon-button icon="menu"></core-icon-button>
-    </core-toolbar>
-
-When taller, elements can pin to either the top (default), middle or bottom.
-
-    <core-toolbar class="tall">
-      <core-icon-button icon="menu"></core-icon-button>
-      <div class="middle indent">Middle Title</div>
-      <div class="bottom indent">Bottom Title</div>
-    </core-toolbar>
-    
-To make an element completely fits at the bottom of the toolbar, use `fit` along
-with `bottom`.
-
-    <core-toolbar class="tall">
-      <div id="progressBar" class="bottom fit"></div>
-    </core-toolbar>
-
-@group Polymer Core Elements
-@element core-toolbar
-@homepage github.io
--->
-
-
-
 <polymer-element name="core-toolbar" noscript="" assetpath="bower_components/core-toolbar/">
 <template>
 
@@ -529,6 +416,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   height: 64px;
   /* typography */
   font-size: 1.3em;
+  /* background */
+  background-color: #CFD8DC;
 }
 
 :host(.animate) {
@@ -650,8 +539,8 @@ polyfill-next-selector { content: ':host .indent'; }
 
 </template>
 </polymer-element>
-</div>
-    <div hidden><!--
+
+<!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
@@ -661,36 +550,74 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <!--
-`paper-tabs` is a `core-selector` styled to look like tabs. Tabs make it easy to 
-explore and switch between different views or functional aspects of an app, or 
-to browse categorized data sets.
+`core-drawer-panel` contains a drawer panel and a main panel.  The drawer
+and the main panel are side-by-side with drawer on the left.  When browser
+window size is smaller than the `responsiveWidth`, `core-drawer-panel` 
+changes to narrow layout.  In narrow layout, the drawer will be stacked on top
+of the main panel.  The drawer will be slided in/out to hide/reveal the main
+panel.
 
-Use `selected` property to get or set the selected tab.
+Use the attribute `drawer` to indicate the element is a drawer panel and
+`main` to indicate is a main panel.
 
 Example:
 
-    <paper-tabs selected="0">
-      <paper-tab>TAB 1</paper-tab>
-      <paper-tab>TAB 2</paper-tab>
-      <paper-tab>TAB 3</paper-tab>
-    </paper-tabs>
+    <core-drawer-panel>
+      <div drawer> Drawer panel... </div>
+      <div main> Main panel... </div>
+    </core-drawer-panel>
 
-See <a href="../paper-tab/">paper-tab</a> for more information about 
-`paper-tab`.
-
-Styling tabs:
-
-To change the sliding bar color:
-
-    paper-tabs.pink::shadow #selectionBar {
-      background-color: #ff4081;
-    }
-
-@group Quantum Paper Elements
-@element paper-tabs
-@extends core-selector
+@group Polymer Core Elements
+@element core-drawer-panel
 @homepage github.io
 -->
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--
+/**
+ * @group Polymer Core Elements
+ * @element core-media-query
+ * @status beta
+ * @homepage github.io
+ *
+ * core-media-query can be used to data bind to a CSS media query.
+ * The "query" property is a bare CSS media query.
+ * The "queryMatches" property will be a boolean representing if the page matches that media query.
+ *
+ * core-media-query uses media query listeners to dynamically update the "queryMatches" property.
+ * A "core-media-change" event also fires when queryMatches changes.
+ *
+ * Example:
+ *
+ *      <core-media-query query="max-width: 640px" queryMatches="{{phoneScreen}}"></core-media-query>
+ *
+ */
+
+ /**
+  * Fired when the media query state changes
+  *
+  * @event core-media-change
+  */
+-->
+
+
+<polymer-element name="core-media-query" attributes="query queryMatches" assetpath="bower_components/core-media-query/">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+  
+</polymer-element>
 
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
@@ -846,132 +773,8 @@ contains the selection state.
   
 </polymer-element>
 
-<!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 
-<!--
-`paper-tab` is styled to look like a tab.  It should be used in conjunction with
-`paper-tabs`.
-
-Example:
-
-    <paper-tabs selected="0">
-      <paper-tab>TAB 1</paper-tab>
-      <paper-tab>TAB 2</paper-tab>
-      <paper-tab>TAB 3</paper-tab>
-    </paper-tabs>
-    
-Styling tab:
-
-To change the ink color:
-
-    .pink paper-tab::shadow #ink {
-      color: #ff4081;
-    }
-
-@group Quantum Paper Elements
-@element paper-tab
-@homepage github.io
--->
-
-<!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-`paper-ripple` provides a visual effect that other quantum paper elements can
-use to simulate a rippling effect emanating from the point of contact.  The
-effect can be visualized as a concentric circle with motion.
-
-Example:
-
-    <paper-ripple></paper-ripple>
-
-`paper-ripple` listens to "down" and "up" events so it would display ripple
-effect when touches on it.  You can also defeat the default behavior and 
-manually route the down and up actions to the ripple element.  Note that it is
-important if you call downAction() you will have to make sure to call upAction()
-so that `paper-ripple` would end the animation loop.
-
-Example:
-
-    <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
-    ...
-    downAction: function(e) {
-      this.$.ripple.downActon({x: e.x, y: e.y});
-    },
-    upAction: function(e) {
-      this.$.ripple.upAction();
-    }
-
-Styling ripple effect:
-
-  Use CSS color property to style the ripple:
-
-    paper-ripple {
-      color: #4285f4;
-    }
-
-  Note that CSS color property is inherited so it is not required to set it on
-  the `paper-ripple` element directly.
-
-Apply `recenteringTouch` class to make the recentering rippling effect.
-
-    <paper-ripple class="recenteringTouch"></paper-ripple>
-
-Apply `circle` class to make the rippling effect within a circle.
-
-    <paper-ripple class="circle"></paper-ripple>
-
-@group Paper Elements
-@element paper-ripple
-@homepage github.io
--->
-
-
-
-<polymer-element name="paper-ripple" attributes="initialOpacity opacityDecayVelocity" assetpath="bower_components/paper-ripple/">
-<template>
-
-  <style>
-
-    :host {
-      display: block;
-      position: relative;
-    }
-
-    #canvas {
-      pointer-events: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    :host(.circle) #canvas {
-      border-radius: 50%;
-    }
-
-  </style>
-
-</template>
-
-</polymer-element>
-
-
-<polymer-element name="paper-tab" attributes="noink" assetpath="bower_components/paper-tabs/">
+<polymer-element name="core-drawer-panel" assetpath="bower_components/core-drawer-panel/">
 <template>
 
   <style>/*
@@ -985,131 +788,177 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 :host {
   display: block;
-  position: relative;
-  overflow: hidden;
-}
-
-#tabContainer {
   position: absolute;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 
-.tab-content {
-  transition: opacity .1s cubic-bezier(0.4, 0.0, 1, 1), color .1s cubic-bezier(0.4, 0.0, 1, 1);
-  cursor: default;
-  pointer-events: none;
-}
-
-:host(:not(.core-selected)) > .tab-content {
-  opacity: 0.6;
-}
-
-#ink {
+#drawer {
   position: absolute;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
-  color: #ffff8d;
+  /* FIXME(ffu): remove hard-coded drawer panel width */
+  width: 256px;
+  height: 100%;
+  box-sizing: border-box;
+  -mox-box-sizing: border-box;
 }
 
-:host[noink] #ink {
-  pointer-events: none;
+.transition #drawer {
+  transition: -webkit-transform ease-in-out 0.3s, width ease-in-out 0.3s;
+  transition: transform ease-in-out 0.3s, width ease-in-out 0.3s;
 }
 
-:host-context(paper-tabs[noink]) #ink {
-  pointer-events: none;
-}
-</style>
-  
-  <div id="tabContainer" center-justified="" center="" horizontal="" layout="">
-  
-    <div class="tab-content"><content></content></div>
-    <paper-ripple id="ink" initialopacity="0.95" opacitydecayvelocity="0.98"></paper-ripple>
-    
-  </div>
-  
-</template>
-
-</polymer-element>
-
-
-<polymer-element name="paper-tabs" extends="core-selector" attributes="noink nobar" assetpath="bower_components/paper-tabs/">
-<template>
-
-  <style>/*
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+/*
+right-drawer: make drawer on the right side
 */
-
-:host {
-  display: block;
-  position: relative;
-  font-size: 14px;
-  font-weight: 500;
-  height: 48px;
+:host(.right-drawer) #drawer {
+  left: auto;
+  right: 0;
 }
 
-#tabsContainer {
+:host(.right-drawer) .transition #drawer {
+  transition: -webkit-transform ease-in-out 0.3s, width ease-in-out 0.3s;
+  transition: transform ease-in-out 0.3s, width ease-in-out 0.3s;
+}
+
+polyfill-next-selector { content: ':host [drawer]'; }
+::content[select="[drawer]"] > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+#main {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 256px;
+  overflow: auto;
+}
+
+.transition #main {
+  transition: left ease-in-out 0.3s, padding ease-in-out 0.3s;
+}
+
+:host(.right-drawer) #main {
+  left: 0;
+  right: 256px;
+}
+
+:host(.right-drawer) .transition #main {
+  transition: right ease-in-out 0.3s, padding ease-in-out 0.3s;
+}
+
+polyfill-next-selector { content: '#main > [main]'; }
+::content[select="[main]"] > * {
+  height: 100%;
+}
+
+#scrim {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.3);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity ease-in-out 0.38s, visibility ease-in-out 0.38s;
 }
 
-#selectionBar {
-  position: absolute;
-  height: 2px;
-  bottom: 0;
+/*
+no-peek: helper class to make drawer panel 100% width in narrow layout
+*/
+:host(.no-peek) .narrow-layout > #drawer {
+  width: 100%;
+}
+
+:host(.no-peek) .narrow-layout > #drawer:not(.core-selected) {
+  left: -100%;
+}
+
+:host(.no-peek.right-drawer) .narrow-layout > #drawer:not(.core-selected) {
+  left: auto;
+  right: -100%;
+}
+
+/*
+narrow layout
+*/
+.narrow-layout > #drawer.core-selected {
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+polyfill-next-selector { content: ':host .narrow-layout > #drawer > [drawer]'; }
+.narrow-layout > #drawer > ::content[select="[drawer]"] > * {
+  border: 0;
+}
+
+.narrow-layout > #drawer:not(.core-selected) {
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+}
+
+:host(.right-drawer) .narrow-layout > #drawer:not(.core-selected) {
+  left: auto;
+  -webkit-transform: translate3d(100%, 0, 0);
+  transform: translate3d(100%, 0, 0);
+}
+
+.narrow-layout > #main {
+  left: 0 !important;
+  padding: 0;
+}
+
+:host(.right-drawer) .narrow-layout > #main {
   left: 0;
-  width: 0;
-  background-color: #ffff8d;
-  transition: width, left;
+  right: 0;
+  padding: 0;
 }
 
-#selectionBar[hidden] {
-  display: hidden;
+.narrow-layout > #main:not(.core-selected) #scrim {
+  visibility: visible;
+  opacity: 1;
 }
 
-#selectionBar.expand {
-  transition-duration: 0.15s;
-  transition-timing-function: cubic-bezier(0.4, 0.0, 1, 1);
-}
-
-#selectionBar.contract {
-  transition-duration: 0.1s;
-  transition-timing-function: cubic-bezier(0.0, 0.0, 0.2, 1);
-}
-
-polyfill-next-selector { content: '#tabsContainer > *:not(#selectionBar)'; }
-::content > * {
-  -ms-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
+polyfill-next-selector { content: ':host .narrow-layout > #main > [main]'; }
+.narrow-layout > #main > ::content[select="[main]"] > * {
+  margin: 0;
+  min-height: 100%;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 </style>
-  
-  <div id="tabsContainer" horizontal="" layout="">
-  
-    <shadow></shadow>
-    <div id="selectionBar" hidden?="{{nobar}}" on-transitionend="{{barTransitionEnd}}"></div>
+
+  <core-media-query query="max-width: {{responsiveWidth}}" querymatches="{{queryMatches}}"></core-media-query>
+
+  <core-selector class="{{ {&apos;narrow-layout&apos; : queryMatches, transition : transition} | tokenList }}" valueattr="id" selected="{{selected}}">
+
+    <div id="main">
+      <content select="[main]"></content>
+      <div id="scrim" on-tap="{{togglePanel}}"></div>
+    </div>
     
-  </div>
-    
+    <div id="drawer">
+      <content select="[drawer]"></content>
+    </div>
+
+  </core-selector>
+
 </template>
 
 </polymer-element>
-</div>
-    <div hidden>
 
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
@@ -1121,123 +970,135 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <!--
+`core-header-panel` contains a header section and a content panel section. Special
+support is provided for scrolling modes when one uses a core-toolbar or equivalent
+for the header section.
+
+Example:
+
+    <core-header-panel>
+      <core-toolbar>Header</core-toolbar>
+      <div>Content goes here...</div>
+    </core-header-panel>
+
+If you want to use other than `core-toolbar` for the header, add 
+`core-header` class to that element.
+
+Example:
+
+    <core-header-panel>
+      <div class="core-header">Header</div>
+      <div>Content goes here...</div>
+    </core-header-panel>
+
+Use `mode` to control the header and scrolling behavior.
+
 @group Polymer Core Elements
-
-The `core-ajax` element exposes `XMLHttpRequest` functionality.
-
-    <core-ajax
-        auto
-        url="http://gdata.youtube.com/feeds/api/videos/"
-        params='{"alt":"json", "q":"chrome"}'
-        handleAs="json"
-        on-core-response="{{handleResponse}}"></core-ajax>
- 
-With `auto` set to `true`, the element performs a request whenever
-its `url` or `params` properties are changed.
-
-Note: The `params` attribute must be double quoted JSON.
-
-You can trigger a request explicitly by calling `go` on the
-element.
-
-@element core-ajax
-@status beta
+@element core-header-panel
 @homepage github.io
 -->
-<!--
+
+
+
+<polymer-element name="core-header-panel" assetpath="bower_components/core-header-panel/">
+<template>
+
+  <style>/*
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-<!--
-/**
- * @group Polymer Core Elements
- *
- * core-xhr can be used to perform XMLHttpRequests.
- *
- *     <core-xhr id="xhr"></core-xhr>
- *     ...
- *     this.$.xhr.request({url: url, params: params, callback: callback});
- *
- * @element core-xhr
- */
--->
+*/
 
+:host {
+  display: block;
+  position: relative;
+}
 
+#outerContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
 
-<polymer-element name="core-xhr" hidden assetpath="bower_components/core-ajax/">
+#mainPanel {
+  position: relative;
+}
 
+#mainContainer {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+#dropShadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+}
+
+#dropShadow.hidden {
+  display: none;
+}
+
+/* 
+mode: scroll 
+*/
+:host([mode=scroll]) #mainContainer {
+  overflow: visible;
+}
+
+/*
+mode: cover
+*/
+:host([mode=cover]) #mainPanel {
+  position: static;
+}
+
+:host([mode=cover]) #mainContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+:host([mode=cover]) #dropShadow {
+  position: static;
+  width: 100%;
+}
+</style>
   
-  
+  <div id="outerContainer" on-scroll="{{scroll}}" vertical="" layout="">
+
+    <content id="headerContent" select="core-toolbar, .core-header"></content>
+
+    <div id="mainPanel" flex="" vertical="" layout="">
+    
+      <div id="mainContainer" flex?="{{mode !== &apos;cover&apos;}}" on-scroll="{{scroll}}">
+        <content id="mainContent" select="*"></content>
+      </div>
+      
+      <div id="dropShadow"></div>
+      
+    </div>
+
+  </div>
+
+</template>
+
 </polymer-element>
-
-<polymer-element name="core-ajax" attributes="url handleAs auto params response method headers body contentType withCredentials" assetpath="bower_components/core-ajax/">
-
-</polymer-element>
-
-<!-- 
-  `<post-service>` provides an API for a fake service -- 
-  _unquote_, the read-only social networking service!
-
-  Provides a very simple API: `posts` returns the list of posts.
-  `setFavorite` pretends to persist a user's favorite choice.
-
-  @element post-service
-  @demo 
-  @homepage http://www.polymer-project.org/docs/start/tutorial.html
--->
-
-<!--
-  An array of post objects, with the following format:
-
-  <table border="0">
-    <tr>
-      <td><code>uid</code></td>
-      <td>Number</td>
-      <td>Unique ID for this post.</td>
-    </tr>
-     <tr>
-      <td><code>username</code></td>
-      <td>String</td>
-      <td>Poster's username.</td>
-    </tr>
-    <tr>
-      <td><code>avatar</code></td>
-      <td>String</td>
-      <td>URL for the user's avatar.</td>
-    </tr>  
-         <tr>
-      <td><code>text</code></td>
-      <td>String</td>
-      <td>Post text.</td>
-    </tr>  
-    <tr>
-      <td><code>favorite</code></td>
-      <td>Boolean</td>
-      <td>True if the current user favorited this post.</td>
-    </tr>
-  </table>
-  
-  @attribute posts 
-  @type Array
-  @default []
--->
-<polymer-element name="post-service" attributes="posts" assetpath="post-service/">
-  <template>
-    <style>
-    :host {
-      display: none;
-    }
-    </style>
-    <core-ajax id="ajax" auto="" url="../api/posts.json" on-core-response="{{postsLoaded}}" handleas="json">
-    </core-ajax>
-  </template>
-  
-</polymer-element>
-
 
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
@@ -1263,7 +1124,6 @@ how to use a custom icon set.
 
 @group Polymer Core Elements
 @element core-icon-button
-@extends core-theme-aware
 @homepage github.io
 -->
 
@@ -1815,102 +1675,1071 @@ core-icon {
 </polymer-element>
 
 
-<polymer-element name="post-card" assetpath="">
-  <template>
-    <style>
+<polymer-element name="core-scaffold" attributes="responsiveWidth mode" assetpath="bower_components/core-scaffold/">
+<template>
+
+  <style>
+    
+    :host {
+      display: block;
+    }
+    
+    [drawer] {
+      background-color: #fff;
+      box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+    }
+    
+    [main] {
+      height: 100%;
+      background-color: #eee;
+    }
+    
+    core-toolbar {
+      background-color: #526E9C;
+      color: #fff;
+    }
+    
+    #drawerPanel:not([narrow]) #menuButton {
+      display: none;
+    }
+    
+  </style>
+
+  <core-drawer-panel id="drawerPanel" narrow="{{narrow}}" responsivewidth="{{responsiveWidth}}">
+
+    <div vertical="" layout="" drawer="">
+
+      <content select="[navigation], nav"></content>
+
+    </div>
+    
+    <core-header-panel main="" mode="{{mode}}">
+
+      <core-toolbar>
+        <core-icon-button id="menuButton" icon="menu" on-tap="{{togglePanel}}"></core-icon-button>
+        <content select="[tool]"></content>
+      </core-toolbar>
+      
+      <content select="*"></content>
+      
+    </core-header-panel>
+
+  </core-drawer-panel>
+
+</template>
+
+</polymer-element>
+</div>
+  <div hidden>undefined</div>
+  <div hidden><!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`core-menu` is a selector which styles to looks like a menu.
+
+    <core-menu selected="0">
+      <core-item icon="settings" label="Settings"></core-item>
+      <core-item icon="dialog" label="Dialog"></core-item>
+      <core-item icon="search" label="Search"></core-item>
+    </core-menu>
+    
+When an item is selected the `core-selected` class is added to it.  The user can
+use the class to add more stylings to the selected item.
+
+    core-item.core-selected {
+      color: red;
+    }
+
+The `selectedItem` property references the selected item.
+
+    <core-menu selected="0" selectedItem="{{item}}">
+      <core-item icon="settings" label="Settings"></core-item>
+      <core-item icon="dialog" label="Dialog"></core-item>
+      <core-item icon="search" label="Search"></core-item>
+    </core-menu>
+
+    <div>selected label: {{item.label}}</div>
+
+The `core-select` event signals selection change.
+
+    <core-menu selected="0" on-core-select="{{selectAction}}">
+      <core-item icon="settings" label="Settings"></core-item>
+      <core-item icon="dialog" label="Dialog"></core-item>
+      <core-item icon="search" label="Search"></core-item>
+    </core-menu>
+
+    ...
+
+    selectAction: function(e, detail) {
+      if (detail.isSelected) {
+        var selectedItem = detail.item;
+        ...
+      }
+    }
+
+@group Polymer Core Elements
+@element core-menu
+@extends core-selector
+-->
+
+
+
+<style shim-shadowdom="">/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+html /deep/ core-menu {
+  display: block;
+  margin: 12px;
+}
+
+polyfill-next-selector { content: 'core-menu > core-item'; }
+html /deep/ core-menu::shadow ::content > core-item {
+  cursor: default;
+}
+</style>
+
+<polymer-element name="core-menu" extends="core-selector" noscript="" assetpath="bower_components/core-menu/"></polymer-element>
+</div>
+  <div hidden><!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`core-item` is a simple line-item object: a label and/or an icon that can also 
+act as a link.
+
+Example:
+
+    <core-item icon="settings" label="Settings"></core-item>
+    
+To use as a link, put &lt;a&gt; element in the item.
+
+Example:
+
+    <core-item icon="settings" label="Settings">
+      <a href="#settings" target="_self"></a>
+    </core-item>
+
+@group Polymer Core Elements
+@element core-item
+@homepage github.io
+-->
+
+
+
+<style shim-shadowdom="">/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+html /deep/ core-item {
+  display: block;
+  position: relative;
+  height: 40px;
+  white-space: nowrap;
+}
+
+html /deep/ core-item.core-selected {
+  font-weight: bold;
+}
+
+html /deep/ core-item::shadow core-icon {
+  margin: 0 16px 0 4px;
+}
+
+html /deep/ core-item::shadow ::content > a {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+</style>
+
+<polymer-element name="core-item" attributes="label icon src" horizontal="" center="" layout="" assetpath="bower_components/core-item/">
+<template>
+
+  <core-icon src="{{src}}" icon="{{icon}}" hidden?="{{!src &amp;&amp; !icon}}"></core-icon>{{label}}<content></content>
+  
+</template>
+
+</polymer-element>
+</div>
+  <div hidden>undefined</div>
+  <div hidden>undefined</div>
+  <div hidden><!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+-->
+
+<!--
+Use to create nested menus inside of `core-menu` elements.
+
+    <core-menu selected="0">
+    
+      <core-submenu icon="settings" label="Topics">
+        <core-item label="Topic 1"></core-item>
+        <core-item label="Topic 2"></core-item>
+      </core-submenu>
+      
+      <core-submenu icon="settings" label="Favorites">
+        <core-item label="Favorite 1"></core-item>
+        <core-item label="Favorite 2"></core-item>
+        <core-item label="Favorite 3"></core-item>
+      </core-submenu>
+      
+    </core-menu>
+    
+There is a margin set on the submenu to indent the items.
+You can override the margin by doing:
+
+    core-submenu::shadow #submenu {
+      margin-left: 20px;
+    }
+
+@group Polymer Core Elements
+@element core-submenu
+@extends core-item
+-->
+
+
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`core-collapse` creates a collapsible block of content.  By default, the content
+will be collapsed.  Use `opened` to show/hide the content.
+
+    <button on-click="{{toggle}}">toggle collapse</button>
+    
+    <core-collapse id="collapse"></core-collapse>
+      ...
+    </core-collapse>
+    
+    ...
+
+    toggle: function() {
+      this.$.collapse.toggle();
+    }
+
+@group Polymer Core Elements
+@element core-collapse
+-->
+
+
+
+<style shim-shadowdom="">/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+html /deep/ core-collapse {
+  display: block;
+}
+
+html /deep/ .core-collapse-closed {
+  display: none;
+}
+</style>
+
+<polymer-element name="core-collapse" attributes="target horizontal opened duration fixedSize" assetpath="bower_components/core-collapse/">
+<template>
+
+  <content></content>
+
+</template>
+
+</polymer-element>
+
+
+<polymer-element name="core-submenu" attributes="selected selectedItem label icon src" assetpath="bower_components/core-menu/">
+<template>
+
+  <style>/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+*/
+
+:host { 
+  display: block;
+  height: auto;
+}
+
+:host(.core-selected, [active]) {
+  font-weight: initial;
+}
+
+core-item {
+  cursor: default;
+}
+
+::content > core-item {
+ cursor: default; 
+}
+
+#submenu {
+  margin: 0 0 0 44px;
+}
+</style>
+
+  <core-item src="{{src}}" label="{{label}}" icon="{{icon}}" class="{{ {&apos;core-selected&apos; : active} | tokenList}}" on-tap="{{activate}}">
+    <content select=".item-content"></content>
+  </core-item>
+
+  <core-menu id="submenu" selected="{{selected}}" selecteditem="{{selectedItem}}">
+    <content></content>
+  </core-menu>
+
+  <core-collapse target="{{$.submenu}}" opened="{{opened}}"></core-collapse>
+
+</template>
+
+</polymer-element>
+</div>
+  <div hidden><!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`paper-toast` provides lightweight feedback about an operation in a small popup 
+at the base of the screen on mobile and at the lower left on desktop. Toasts are 
+above all other elements on screen, including the FAB.
+
+Toasts automatically disappear after a timeout or after user interaction 
+elsewhere on the screen, whichever comes first. Toasts can be swiped off 
+screen.  There can be only one on the screen at a time.
+
+Example:
+
+    <paper-toast text="Your draft has been discarded." onclick="discardDraft(el)"></paper-toast>
+    
+    <script>
+      function discardDraft(el) {
+        el.show();
+      }
+    </script>
+    
+An action button can be presented in the toast.
+
+Example (using Polymer's data-binding features):
+
+    <paper-toast id="toast2" text="Connection timed out. Showing limited messages.">
+      <div style="color: blue;" on-tap="{{retry}}">Retry</div>
+    </paper-toast>
+    
+Positioning toast:
+
+A standard toast appears near the lower left of the screen.  You can change the
+position by overriding bottom and left positions.
+
+    paper-toast {
+      bottom: 40px;
+      left: 10px;
+    }
+  
+To make it fit at the bottom of the screen:
+
+    paper-toast {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+  
+When the screen size is smaller than the `responsiveWidth` (default to 480px),
+the toast will automatically fits at the bottom of the screen.
+
+@group Paper Elements
+@element paper-toast
+@homepage github.io
+-->
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+
+<polymer-element name="core-transition" extends="core-meta" assetpath="bower_components/core-transition/">
+  
+  
+</polymer-element>
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+
+<polymer-element name="core-key-helper" assetpath="bower_components/core-overlay/">
+  
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<polymer-element name="core-overlay-layer" assetpath="bower_components/core-overlay/">
+<template>
+  <style>
+    :host {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      display: none;
+    }
+
+    :host(.core-opened) {
+      display: block;
+    }
+  </style>
+  <content></content>
+</template>
+
+</polymer-element>
+
+
+<!--
+The `core-overlay` element displays overlayed on top of other content. It starts
+out hidden and is displayed by setting its `opened` property to true.
+A `core-overlay's` opened state can be toggled by calling the `toggle`
+method.
+
+The `core-overlay` will, by default, show/hide itself when it's opened. The 
+`target` property may be set to another element to cause that element to 
+be shown when the overlay is opened.
+
+It's common to want a `core-overlay` to animate to its opened
+position. The `core-overlay` element uses a `core-transition` to handle
+animation. The default transition is `core-transition-fade` which 
+causes the overlay to fade in when displayed. See 
+<a href="../core-transition/">`core-transition`</a> for more
+information about customizing a `core-overlay's` opening animation. The
+`backdrop` property can be set to true to show a backdrop behind the overlay
+that will darken the rest of the window.
+
+An element that should close the `core-overlay` will automatically
+do so if it's given the `core-overlay-toggle` attribute. This attribute
+can be customized with the `closeAttribute` property. You can also use
+`closeSelector` if more general matching is needed.
+
+By default  `core-overlay` will close whenever the user taps outside it or
+presses the escape key. This behavior can be turned off via the
+`autoCloseDisabled` property.
+
+    <core-overlay>
+      <h2>Dialog</h2>
+      <input placeholder="say something..." autofocus>
+      <div>I agree with this wholeheartedly.</div>
+      <button core-overlay-toggle>OK</button>
+    </core-overlay>
+
+`core-overlay` will automatically size and position itself according to the 
+following rules. If the target's style.top and style.left are unset, the 
+target will be centered. The size of the target is constrained to be no larger
+than the window dimensions. The `margin` property specifies the extra amount
+of space that should be reserved around the overlay. This can be used to ensure
+that, for example, a drop shadow is always visible around the overlay.
+
+@group Core Elements
+@element core-overlay
+@homepage github.io
+-->
+<!--
+Fired when the `core-overlay`'s `opened` property changes.
+
+@event core-overlay-open
+@param {Object} detail
+@param {Object} detail.opened the opened state
+-->
+
+<style>
+  .core-overlay-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .core-overlay-backdrop.core-opened {
+    opacity: 0.6;
+  }
+</style>
+
+<polymer-element name="core-overlay" assetpath="bower_components/core-overlay/">
+
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+
+<polymer-element name="core-transition-css" extends="core-transition" attributes="transitionType" assetpath="bower_components/core-transition/">
+<template>
+  <style no-shim="">/* Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt */
+
+:host(.core-transition) {
+  outline: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out, opacity 0.2s ease-in;
+}
+
+
+:host(.core-transition.core-opened) {
+  opacity: 1;
+  transform: none;
+  -webkit-transform: none;
+}
+
+:host(.core-transition-center) {
+  transform: scale(0.5);
+  -webkit-transform: scale(0.5);
+}
+
+:host(.core-transition-top) {
+  transform: translateY(-200%);
+  -webkit-transform: translateY(-200%);
+}
+
+:host(.core-transition-bottom) {
+  transform: translateY(200%);
+  -webkit-transform: translateY(200%);
+}
+
+:host(.core-transition-left) {
+  transform: translateX(-200%);
+  -webkit-transform: translateX(-200%);
+}
+
+:host(.core-transition-right) {
+  transform: translateX(200%);
+  -webkit-transform: translateX(200%);
+}</style>
+</template>
+
+</polymer-element>
+
+<core-transition-css id="core-transition-fade"></core-transition-css>
+<core-transition-css id="core-transition-center" transitiontype="center"></core-transition-css>
+<core-transition-css id="core-transition-top" transitiontype="top"></core-transition-css>
+<core-transition-css id="core-transition-bottom" transitiontype="bottom"></core-transition-css>
+<core-transition-css id="core-transition-left" transitiontype="left"></core-transition-css>
+<core-transition-css id="core-transition-right" transitiontype="right"></core-transition-css>
+
+
+
+<polymer-element name="paper-toast" attributes="text duration opened responsiveWidth swipeDisabled" assetpath="bower_components/paper-toast/">
+
+<template>
+
+  <style>/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+:host {
+  display: inline-block;
+  background: #323232;
+  color: #f1f1f1;
+  min-height: 48px;
+  min-width: 288px;
+  padding: 16px 24px 12px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 2px;
+  bottom: 12px;
+  left: 12px;
+  font-size: 14px;
+  cursor: default;
+}
+
+:host(.capsule) {
+  border-radius: 24px;
+}
+
+:host(.fit-bottom) {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-width: 0;
+  border-radius: 0;
+}
+
+:host(.core-transition.dragging) {
+  transition: none;
+}
+
+:host(.core-transition.fade-out-down),
+:host(.core-transition.fade-out-up),
+:host(.core-transition.fade-out-right),
+:host(.core-transition.fade-out-left) {
+  opacity: 0;
+  transition: -webkit-transform 0.08s ease-in-out, opacity 0.08s ease-in-out;
+  transition: transform 0.08s ease-in-out, opacity 0.08s ease-in-out;
+}
+
+:host(.core-transition.fade-out-down) {
+  -webkit-transform: translate(0, 100%);
+  transform: translate(0, 100%);
+}
+
+:host(.core-transition.fade-out-up) {
+  -webkit-transform: translate(0, -100%);
+  transform: translate(0, -100%);
+}
+
+:host(.core-transition.fade-out-right) {
+  -webkit-transform: translate(100%, 0);
+  transform: translate(100%, 0);
+}
+
+:host(.core-transition.fade-out-left) {
+  -webkit-transform: translate(-100%, 0);
+  transform: translate(-100%, 0);
+}
+
+.toast-container {
+  overflow: hidden;
+}
+
+.toast-action {
+  padding-left: 24px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+</style>
+
+  <core-overlay opened="{{opened}}" target="{{}}" sizingtarget="{{$.container}}" transition="core-transition-bottom"></core-overlay>
+
+  <div class="toast-container" horizontal="" layout="">
+
+    <div class="toast-text" flex="">{{text}}</div>
+    
+    <div class="toast-text toast-action" on-tap="{{dismiss}}">
+      <content></content>
+    </div>
+
+  </div>
+  
+  <core-media-query query="max-width: {{responsiveWidth}}" querymatches="{{narrowMode}}"></core-media-query>
+
+</template>
+
+</polymer-element>
+</div>
+  <div hidden><!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`paper-tabs` is a `core-selector` styled to look like tabs. Tabs make it easy to 
+explore and switch between different views or functional aspects of an app, or 
+to browse categorized data sets.
+
+Use `selected` property to get or set the selected tab.
+
+Example:
+
+    <paper-tabs selected="0">
+      <paper-tab>TAB 1</paper-tab>
+      <paper-tab>TAB 2</paper-tab>
+      <paper-tab>TAB 3</paper-tab>
+    </paper-tabs>
+
+See <a href="../paper-tab/">paper-tab</a> for more information about 
+`paper-tab`.
+
+Styling tabs:
+
+To change the sliding bar color:
+
+    paper-tabs.pink::shadow #selectionBar {
+      background-color: #ff4081;
+    }
+
+@group Paper Elements
+@element paper-tabs
+@extends core-selector
+@homepage github.io
+-->
+
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`paper-tab` is styled to look like a tab.  It should be used in conjunction with
+`paper-tabs`.
+
+Example:
+
+    <paper-tabs selected="0">
+      <paper-tab>TAB 1</paper-tab>
+      <paper-tab>TAB 2</paper-tab>
+      <paper-tab>TAB 3</paper-tab>
+    </paper-tabs>
+    
+Styling tab:
+
+To change the ink color:
+
+    .pink paper-tab::shadow #ink {
+      color: #ff4081;
+    }
+
+@group Paper Elements
+@element paper-tab
+@homepage github.io
+-->
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`paper-ripple` provides a visual effect that other paper elements can
+use to simulate a rippling effect emanating from the point of contact.  The
+effect can be visualized as a concentric circle with motion.
+
+Example:
+
+    <paper-ripple></paper-ripple>
+
+`paper-ripple` listens to "down" and "up" events so it would display ripple
+effect when touches on it.  You can also defeat the default behavior and 
+manually route the down and up actions to the ripple element.  Note that it is
+important if you call downAction() you will have to make sure to call upAction()
+so that `paper-ripple` would end the animation loop.
+
+Example:
+
+    <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
+    ...
+    downAction: function(e) {
+      this.$.ripple.downAction({x: e.x, y: e.y});
+    },
+    upAction: function(e) {
+      this.$.ripple.upAction();
+    }
+
+Styling ripple effect:
+
+  Use CSS color property to style the ripple:
+
+    paper-ripple {
+      color: #4285f4;
+    }
+
+  Note that CSS color property is inherited so it is not required to set it on
+  the `paper-ripple` element directly.
+
+Apply `recenteringTouch` class to make the recentering rippling effect.
+
+    <paper-ripple class="recenteringTouch"></paper-ripple>
+
+Apply `circle` class to make the rippling effect within a circle.
+
+    <paper-ripple class="circle"></paper-ripple>
+
+@group Paper Elements
+@element paper-ripple
+@homepage github.io
+-->
+
+
+
+<polymer-element name="paper-ripple" attributes="initialOpacity opacityDecayVelocity" assetpath="bower_components/paper-ripple/">
+<template>
+
+  <style>
+
     :host {
       display: block;
       position: relative;
-      background-color: white;
-      padding: 20px;
-      width: 100%;
-      font-size: 1.2rem;
-      font-weight: 300;
     }
-    .card-header {
-      margin-bottom: 10px;
-    }
-    polyfill-next-selector { content: ".card-header h2"; }
-    .card-header ::content h2 {
-      margin: 0;
-      font-size: 1.8rem;
-      font-weight: 300;
-    }
-    polyfill-next-selector { content: ".card-header img"; }
-    .card-header ::content img {
-      width: 70px;
-      border-radius: 50%;
-      margin: 10px;
-    }
-    core-icon-button {
+
+    #canvas {
+      pointer-events: none;
       position: absolute;
-      top: 3px;
-      right: 3px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
-    core-icon-button {
-      fill: #636363;
+
+    :host(.circle) #canvas {
+      border-radius: 50%;
     }
-    :host([favorite]) core-icon-button {
-      fill: #da4336;
-    }
-    </style>
-    <div class="card-header" layout="" horizontal="" center="">
-      <content select="img"></content>
-      <content select="h2"></content>
-    </div>
-    <core-icon-button id="favicon" icon="favorite" on-tap="{{favoriteTapped}}">
-    </core-icon-button>
-    <content></content>
-  </template>
-  
+
+  </style>
+
+</template>
+
 </polymer-element>
 
 
-<polymer-element name="post-list" attributes="show" assetpath="">
-  <template>
-    <style>
-    :host {
-      display: block;
-      width: 100%;
-    }
-    post-card {
-      margin-bottom: 30px;
-    }
-    </style>
+<polymer-element name="paper-tab" attributes="noink" assetpath="bower_components/paper-tabs/">
+<template>
 
-    <post-service id="service" posts="{{posts}}"></post-service>
-    
-    <div layout="" vertical="" center="">
-      <template repeat="{{post in posts}}">
-        <post-card favorite="{{post.favorite}}" on-favorite-tap="{{handleFavorite}}" hidden?="{{show == &apos;favorites&apos; &amp;&amp; !post.favorite}}">
-          <img src="{{post.avatar}}" width="70" height="70">
-          <h2>{{post.username}}</h2>
-          <p>{{post.text}}</p>
-        </post-card>
-      </template>
-    </div>
-  </template>
+  <style>/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
 
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+#tabContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.tab-content {
+  transition: opacity .1s cubic-bezier(0.4, 0.0, 1, 1), color .1s cubic-bezier(0.4, 0.0, 1, 1);
+  cursor: default;
+  pointer-events: none;
+}
+
+:host(:not(.core-selected)) .tab-content {
+  opacity: 0.6;
+}
+
+#ink {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: #ffff8d;
+}
+
+:host[noink] #ink {
+  pointer-events: none;
+}
+
+:host-context(paper-tabs[noink]) #ink {
+  pointer-events: none;
+}
+</style>
   
+  <div id="tabContainer" center-justified="" center="" horizontal="" layout="">
+  
+    <div class="tab-content"><content></content></div>
+    <paper-ripple id="ink" initialopacity="0.95" opacitydecayvelocity="0.98"></paper-ripple>
+    
+  </div>
+  
+</template>
+
+</polymer-element>
+
+
+<polymer-element name="paper-tabs" extends="core-selector" attributes="noink nobar" assetpath="bower_components/paper-tabs/">
+<template>
+
+  <style>/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+:host {
+  display: block;
+  position: relative;
+  font-size: 14px;
+  font-weight: 500;
+  height: 48px;
+  overflow: hidden;
+}
+
+#tabsContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+}
+
+#selectionBar {
+  position: absolute;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  background-color: #ffff8d;
+  transition: width, left;
+}
+
+#selectionBar[hidden] {
+  display: hidden;
+}
+
+#selectionBar.expand {
+  transition-duration: 0.15s;
+  transition-timing-function: cubic-bezier(0.4, 0.0, 1, 1);
+}
+
+#selectionBar.contract {
+  transition-duration: 0.1s;
+  transition-timing-function: cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+polyfill-next-selector { content: '#tabsContainer > *:not(#selectionBar)'; }
+::content > * {
+  -ms-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+</style>
+  
+  <div id="tabsContainer" horizontal="" layout="">
+  
+    <shadow></shadow>
+    <div id="selectionBar" hidden?="{{nobar}}" on-transitionend="{{barTransitionEnd}}"></div>
+    
+  </div>
+    
+</template>
+
 </polymer-element>
 </div>
-    <link rel="stylesheet" href="styles/main.css">
+  <div hidden>undefined</div>
+  <div hidden>undefined</div>
     <!-- endbuild -->
   </head>
 
   <body unresolved="">
-    <core-header-panel>
-      <core-toolbar>
-        <paper-tabs selected="all" valueattr="name" self-end="">
-          <paper-tab name="all">ALL</paper-tab>
-          <paper-tab name="favorites">FAVORITES</paper-tab>
-        </paper-tabs>
-      </core-toolbar>
-      <div class="container" layout="" vertical="" center="">
-        <post-list show="all"></post-list>
-      </div>
-    </core-header-panel>
-
-    
+    <core-scaffold id="core_scaffold">
+      <core-header-panel mode="seamed" id="core_header_panel" navigation="" flex="">
+        <core-toolbar id="core_toolbar"></core-toolbar>
+        <core-menu valueattr="label" id="core_menu" theme="core-light-theme">
+          <core-item label="Item1" icon="settings" id="core_item" horizontal="" center="" layout=""></core-item>
+          <core-item label="Item2" icon="settings" id="core_item1" horizontal="" center="" layout=""></core-item>
+        </core-menu>
+      </core-header-panel>
+      <div id="div" tool="">Title</div>
+    </core-scaffold>
   <script src="build.js"></script></body>
 </html>
